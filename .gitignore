@@ -31,3 +31,4 @@ pom.xml.tag
 .gitignore~Initial project set-up_0
 
 .gitignore~Initial project set-up
+/bin/

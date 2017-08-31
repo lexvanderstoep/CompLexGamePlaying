@@ -5,5 +5,13 @@ package uk.co.complex.lvs.ggp;
  * @author Lex van der Stoep
  */
 public abstract class Move {
-	//TODO: implement
+	private Player mPlayer;
+	
+	public Move (Player player) {
+		mPlayer = player;
+	}
+	
+	public Player getPlayer() {
+		return mPlayer;
+	}
 }
