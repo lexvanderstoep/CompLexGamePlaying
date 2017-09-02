@@ -1,5 +1,7 @@
 package uk.co.complex.lvs.ggp.games.TicTacToe;
 
+import java.util.Scanner;
+
 import uk.co.complex.lvs.ggp.Move;
 import uk.co.complex.lvs.ggp.Player;
 import uk.co.complex.lvs.ggp.State;
@@ -12,14 +14,17 @@ import uk.co.complex.lvs.ggp.StateMachine;
  */
 public class TicTacToeHuman extends Player {
 
-	public TicTacToeHuman() {
-		super("Human");
+	public TicTacToeHuman(String name) {
+		super(name);
 	}
 	
 	@Override
 	public Move getNextMove(State s, StateMachine m) {
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("In which box do you want to put a mark (-1 for null move)? ");
+		Scanner in = new Scanner(System.in);
+		int idx = in.nextInt();
+		
+		return new TicTacToeMove(this, idx);
 	}
 
 }

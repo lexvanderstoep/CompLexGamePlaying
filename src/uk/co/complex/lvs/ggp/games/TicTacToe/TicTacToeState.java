@@ -27,4 +27,36 @@ public class TicTacToeState extends State {
 		xTurn = true;
 		Arrays.fill(board, BoxState.empty);
 	}
+	
+	@Override
+	public TicTacToeState clone() {
+		TicTacToeState newState = new TicTacToeState(getPlayers());
+		System.arraycopy(board, 0, newState.board, 0, board.length);
+		newState.xTurn = xTurn;
+		return newState;
+	}
+	
+	@Override
+	public String toString() {
+		String s = "";
+		s += (xTurn?"X":"O") + "'s turn\n";
+		for(int i = 0; i < 9; i++) {
+			if (i != 0 & i % 3 == 0) {
+				s += "\n";
+			}
+			String b = "";
+			switch(board[i]) {
+			case empty: b = Integer.toString(i);
+						break;
+			case X:		b = "X";
+						break;
+			case O:		b = "O";
+						break;
+			}
+			s += b;
+		}
+		s += "\n\n";
+		
+		return s;
+	}
 }

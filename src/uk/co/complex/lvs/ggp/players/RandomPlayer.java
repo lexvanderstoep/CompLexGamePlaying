@@ -8,10 +8,15 @@ import uk.co.complex.lvs.ggp.Player;
 import uk.co.complex.lvs.ggp.State;
 import uk.co.complex.lvs.ggp.StateMachine;
 
+/**
+ * The RandomPlayer is a simple player. When asked for a next move, it returns a randomly selected
+ * move from the list of possible moves.
+ * @author Lex van der Stoep
+ */
 public class RandomPlayer extends Player {
 
-	public RandomPlayer() {
-		super("Random");
+	public RandomPlayer(String name) {
+		super(name);
 	}
 	
 	@Override

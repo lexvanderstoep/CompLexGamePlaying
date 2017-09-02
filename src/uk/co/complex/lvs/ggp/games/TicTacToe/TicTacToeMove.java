@@ -11,4 +11,8 @@ public class TicTacToeMove extends Move {
 		super(player);
 		index = idx;
 	}
+	
+	public static TicTacToeMove getNullMove(Player player) {
+		return new TicTacToeMove(player, -1);
+	}
 }

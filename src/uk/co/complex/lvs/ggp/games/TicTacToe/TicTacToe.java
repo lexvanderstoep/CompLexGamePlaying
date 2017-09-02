@@ -22,12 +22,12 @@ public class TicTacToe implements StateMachine {
 		
 		if (p != currentPlayer) {
 			// Return the null move
-			TicTacToeMove move = new TicTacToeMove(p, -1);
+			TicTacToeMove move = TicTacToeMove.getNullMove(p);
 			moves.add(move);
 		} else {
 			// Return all possible moves (places which are still empty)
 			for (int i = 0; i < 9; i++) {
-				if (state.board[i] != BoxState.empty) {
+				if (state.board[i] == BoxState.empty) {
 					TicTacToeMove move = new TicTacToeMove(p, i);
 					moves.add(move);
 				}
@@ -38,23 +38,35 @@ public class TicTacToe implements StateMachine {
 	}
 
 	@Override
-	public State getNextState(State s, Move m) throws IllegalMoveException {
-		TicTacToeState state = (TicTacToeState) s;
-		TicTacToeMove move = (TicTacToeMove) m;
+	public State getNextState(State s, Map<Player, Move> moves) throws IllegalMoveException {
+		TicTacToeState state = ( TicTacToeState) s.clone();
 		List<Player> players = state.getPlayers();
 		Player currentPlayer = state.xTurn?players.get(0):players.get(1);
 		
-		if (m.getPlayer() != currentPlayer) {
-			// It is not this player's turn. Therefore, the move should be the null move
-			if (move.index != -1) {
-				throw new IllegalMoveException(state, move);
-			}
-		} else {
-			// Check if the box selected as the move is empty
-			if (state.board[move.index] != BoxState.empty) throw new IllegalMoveException(state, move);
+		// Check the moves for all the players. If it is not the player's turn, then the move 
+		// should be the null move. If it is the player's turn, then the move should be 
+		// checked for validity.
+		for (Player p: moves.keySet()) {
+			TicTacToeMove m = (TicTacToeMove) moves.get(p);
 			
-			state.board[move.index] = state.xTurn?BoxState.X:BoxState.O;
+			if (p == currentPlayer) { // it is the player's turn
+				// Check if the box selected as the move is empty
+				if (m.index < 0 | m.index > 8) throw new IllegalMoveException(state, m);
+				
+				if (state.board[m.index] != BoxState.empty) throw new IllegalMoveException(state, m);
+				
+				// Update the board
+				state.board[m.index] = state.xTurn?BoxState.X:BoxState.O;
+			} else {
+				// it is not the player's turn, then check if it's null move
+				if (m.index != -1) {
+					throw new IllegalMoveException(state, m);
+				}
+			}
 		}
+		
+		// Change who's turn it is
+		state.xTurn = !state.xTurn;
 		
 		return state;
 	}
@@ -117,6 +129,8 @@ public class TicTacToe implements StateMachine {
 
 	@Override
 	public State getInitialState(List<Player> players) {
+		if (players.size() != 2) throw new IllegalArgumentException("Tic Tac Toe requires exactly "
+				+ "two players. There were " + players.size() + " players provided.");
 		TicTacToeState initialState = new TicTacToeState(players);
 		return initialState;
 	}

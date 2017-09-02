@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * A StateMachine generates possible moves for a given state and computes the next state from a 
  * current state and a given move.
- * @author Lex
+ * @author Lex van der Stoep
  */
 public interface StateMachine {
 	/**
@@ -18,13 +18,13 @@ public interface StateMachine {
 	public List<Move> getMoves (State s, Player p);
 	
 	/**
-	 * Applies the move to the given state.
+	 * Applies the moves of all players to the given state.
 	 * @param s Current state
-	 * @param m Move to apply
+	 * @param moves Moves to apply
 	 * @return The next state
-	 * @throws IllegalMoveException	It is not possible to apply the move to the given state. 
+	 * @throws IllegalMoveException	It is not possible to apply the moves to the given state. 
 	 */
-	public State getNextState (State s, Move m) throws IllegalMoveException;
+	public State getNextState (State s, Map<Player, Move> moves) throws IllegalMoveException;
 	
 	/**
 	 * Computes whether the given state is a terminal state.
@@ -41,7 +41,7 @@ public interface StateMachine {
 	public Map<Player, Integer> getScores(State s);
 	
 	/**
-	 * Gets the initial state of the game.
+	 * Gets the initial state of the game. This essentially marks the start of a new game.
 	 * @param players The players who will play the game
 	 * @return The initial state
 	 */
