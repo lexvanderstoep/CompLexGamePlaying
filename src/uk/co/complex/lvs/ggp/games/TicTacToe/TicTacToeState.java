@@ -46,7 +46,7 @@ public class TicTacToeState extends State {
 			}
 			String b = "";
 			switch(board[i]) {
-			case empty: b = Integer.toString(i);
+			case empty: b = "-";
 						break;
 			case X:		b = "X";
 						break;

@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.complex.lvs.ggp.games.TicTacToe.TicTacToe;
+import uk.co.complex.lvs.ggp.games.TicTacToe.TicTacToeHuman;
+import uk.co.complex.lvs.ggp.players.MinimaxPlayer;
 import uk.co.complex.lvs.ggp.players.RandomPlayer;
 
 public class GameManager {
 	
 	/**
-	 * Starts running the given game with the provide players. It asks the players for moves until 
+	 * Starts running the given game with the provided players. It asks the players for moves until 
 	 * a terminal state is reached.
 	 * @param game The StateMachine which represents the concept of the game
 	 * @param players A list of players who will play the game
@@ -32,6 +34,8 @@ public class GameManager {
 				moves.put(p, m);
 			}
 			
+			// Get the next game state. Stop if it is not possible to compute that state (due to 
+			// an illegal move)
 			try {
 				mState = game.getNextState(mState, moves);
 			} catch (IllegalMoveException e) {
@@ -46,7 +50,7 @@ public class GameManager {
 	}
 	
 	/**
-	 * Starts running the given game with the provide players. It asks the players for moves until 
+	 * Starts running the given game with the provided players. It asks the players for moves until 
 	 * a terminal state is reached.
 	 * @param game The StateMachine which represents the concept of the game
 	 * @param players A list of players who will play the game
@@ -57,14 +61,17 @@ public class GameManager {
 	}
 	
 	public static void main(String[] args) {
+		// Initialise game parameters
 		GameManager man = new GameManager();
 		List<Player> players = new ArrayList<>(2);
-		players.add(new RandomPlayer("Random 1"));
-		players.add(new RandomPlayer("Random 2"));
+		players.add(new MinimaxPlayer("Minimax"));
+		players.add(new RandomPlayer("Random"));
 		StateMachine ttt = new TicTacToe();
 		
+		// Start the game
 		Map<Player, Integer> scores = man.play(ttt, players, true);
 		
+		// Print the scores
 		for (Player p: scores.keySet()) {
 			System.out.println("Player " + p + " scored " + scores.get(p) + " points");
 		}
