@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.complex.lvs.ggp.*;
+import uk.co.complex.lvs.ggp.games.TicTacToe.TicTacToeState.BoxState;
 
 public class TicTacToe implements StateMachine {
 	private final int winScore = 100;
@@ -133,12 +134,6 @@ public class TicTacToe implements StateMachine {
 				+ "two players. There were " + players.size() + " players provided.");
 		TicTacToeState initialState = new TicTacToeState(players);
 		return initialState;
-	}
-	
-	
-	
-	public enum BoxState {
-		empty, X, O
 	}
 	
 	private BoxState checkWinner(TicTacToeState state, int idx1, int idx2, int idx3) {

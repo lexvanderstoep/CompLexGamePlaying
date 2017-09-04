@@ -5,7 +5,6 @@ import java.util.List;
 
 import uk.co.complex.lvs.ggp.Player;
 import uk.co.complex.lvs.ggp.State;
-import uk.co.complex.lvs.ggp.games.TicTacToe.TicTacToe.BoxState;
 
 public class TicTacToeState extends State {
 	/* The board is indexed as follows:
@@ -58,5 +57,9 @@ public class TicTacToeState extends State {
 		s += "\n\n";
 		
 		return s;
+	}
+	
+	public enum BoxState {
+		empty, X, O
 	}
 }
