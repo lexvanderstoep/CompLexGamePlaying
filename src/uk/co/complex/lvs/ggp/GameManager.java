@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import uk.co.complex.lvs.ggp.games.ConnectFour.ConnectFour;
 import uk.co.complex.lvs.ggp.games.ConnectFour.ConnectFourHuman;
@@ -66,9 +67,9 @@ public class GameManager {
 		// Initialise game parameters
 		GameManager man = new GameManager();
 		List<Player> players = new ArrayList<>(2);
-		players.add(new ConnectFourHuman("Eline"));
-		players.add(new RandomPlayer("Random 2"));
-		StateMachine game = new ConnectFour();
+		players.add(new MinimaxPlayer("Minimax"));
+		players.add(new RandomPlayer("Random"));
+		StateMachine game = new TicTacToe();
 		
 		// Start the game
 		Map<Player, Integer> scores = man.play(game, players, true);

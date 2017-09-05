@@ -27,15 +27,18 @@ public class MinimaxPlayer extends Player {
 		if (players.size() != 2) throw new IllegalArgumentException("The Minimax algorithm was "
 				+ "implemented for a two-player game.");
 		
-		return maximin(s, m).bestMove;
+		List<Move> moves = m.getMoves(s, this);
+		if (moves.size() == 1) return moves.get(0);
+		
+		return maximin(s, m, Integer.MAX_VALUE).bestMove;
 	}
 	
 	/**
-	 * Calculates the maximum guaranteed score that can be achieved by this player. For that, it
-	 * makes the pessimistic assumption that the opponent will try to minimise our score.
-	 * @return 
+	 * Uses the minimax algorithm to calculate the maximum guaranteed score that can be achieved by
+	 * this player. For that, it makes the pessimistic assumption that the opponent will try to
+	 * minimise our score. It makes use of alpha-beta pruning.
 	 */
-	private MiniMaxResult maximin(State s, StateMachine m) {
+	private MiniMaxResult maximin(State s, StateMachine m, int beta) {
 		// If the current state is terminal, return its value
 		if (m.isTerminal(s)) {
 			return new MiniMaxResult(null, m.getScores(s).get(this));
@@ -65,11 +68,14 @@ public class MinimaxPlayer extends Player {
 				
 				// Check the maximin value of the next state
 				try {
-					val = maximin(m.getNextState(s, moves), m).maximin;
+					val = maximin(m.getNextState(s, moves), m, min).maximin;
 				} catch (IllegalMoveException e) {
 					val = Integer.MAX_VALUE;
 				}
 				if (val < min) min = val;
+				
+				// Alpha pruning
+				if (min < max) break;
 			}
 
 			if (min > max) {
@@ -77,6 +83,9 @@ public class MinimaxPlayer extends Player {
 				max = min;
 				bestMove = possiblePlayerMove;
 			}
+			
+			// Beta pruning
+			if (max > beta) break;
 		}
 
 		return new MiniMaxResult(bestMove, max);
