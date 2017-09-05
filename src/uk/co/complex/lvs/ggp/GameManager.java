@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.complex.lvs.ggp.games.ConnectFour.ConnectFour;
+import uk.co.complex.lvs.ggp.games.ConnectFour.ConnectFourHuman;
 import uk.co.complex.lvs.ggp.games.TicTacToe.TicTacToe;
 import uk.co.complex.lvs.ggp.games.TicTacToe.TicTacToeHuman;
 import uk.co.complex.lvs.ggp.players.MinimaxPlayer;
@@ -65,7 +66,7 @@ public class GameManager {
 		// Initialise game parameters
 		GameManager man = new GameManager();
 		List<Player> players = new ArrayList<>(2);
-		players.add(new RandomPlayer("Random 1"));
+		players.add(new ConnectFourHuman("Eline"));
 		players.add(new RandomPlayer("Random 2"));
 		StateMachine game = new ConnectFour();
 		
