@@ -21,15 +21,15 @@ public class MinimaxPlayer extends Player {
 
 	@Override
 	public Move getNextMove(State s, StateMachine m) {
-		//TODO: implement for n-player game. The algorithm is based upon the assumption that the 
-		//      game is a two-player game.
 		List<Player> players = s.getPlayers();
 		if (players.size() != 2) throw new IllegalArgumentException("The Minimax algorithm was "
 				+ "implemented for a two-player game.");
 		
+		// If there is only one legal move available, choose that one.
 		List<Move> moves = m.getMoves(s, this);
 		if (moves.size() == 1) return moves.get(0);
 		
+		// Run the Minimax algorithm to determine moves
 		return maximin(s, m, Integer.MAX_VALUE).bestMove;
 	}
 	
@@ -75,7 +75,7 @@ public class MinimaxPlayer extends Player {
 				if (val < min) min = val;
 				
 				// Alpha pruning
-				if (min < max) break;
+				if (min <= max) break;
 			}
 
 			if (min > max) {
@@ -85,7 +85,7 @@ public class MinimaxPlayer extends Player {
 			}
 			
 			// Beta pruning
-			if (max > beta) break;
+			if (max >= beta) break;
 		}
 
 		return new MiniMaxResult(bestMove, max);

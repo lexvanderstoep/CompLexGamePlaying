@@ -10,6 +10,7 @@ import uk.co.complex.lvs.ggp.games.ConnectFour.ConnectFour;
 import uk.co.complex.lvs.ggp.games.ConnectFour.ConnectFourHuman;
 import uk.co.complex.lvs.ggp.games.TicTacToe.TicTacToe;
 import uk.co.complex.lvs.ggp.games.TicTacToe.TicTacToeHuman;
+import uk.co.complex.lvs.ggp.players.HeuristicPlayer;
 import uk.co.complex.lvs.ggp.players.MinimaxPlayer;
 import uk.co.complex.lvs.ggp.players.RandomPlayer;
 
@@ -67,9 +68,9 @@ public class GameManager {
 		// Initialise game parameters
 		GameManager man = new GameManager();
 		List<Player> players = new ArrayList<>(2);
-		players.add(new MinimaxPlayer("Minimax"));
-		players.add(new RandomPlayer("Random"));
-		StateMachine game = new TicTacToe();
+		players.add(new ConnectFourHuman("Human"));
+		players.add(new HeuristicPlayer("Heuristic"));
+		StateMachine game = new ConnectFour();
 		
 		// Start the game
 		Map<Player, Integer> scores = man.play(game, players, true);
