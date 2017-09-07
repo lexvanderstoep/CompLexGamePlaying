@@ -20,7 +20,7 @@ public class MinimaxPlayer extends Player {
 	}
 
 	@Override
-	public Move getNextMove(State s, StateMachine m) {
+	public Move getNextMove(State s, StateMachine m, int time) {
 		List<Player> players = s.getPlayers();
 		if (players.size() != 2) throw new IllegalArgumentException("The Minimax algorithm was "
 				+ "implemented for a two-player game.");

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import uk.co.complex.lvs.ggp.games.connectfour.ConnectFour;
 import uk.co.complex.lvs.ggp.games.connectfour.ConnectFourHuman;
@@ -21,17 +22,20 @@ import uk.co.complex.lvs.ggp.players.RandomPlayer;
  * @author Lex van der Stoep
  */
 public class GameManager {
+	private final Random rnd = new Random();
 	
 	/**
 	 * Starts running the given game with the provided players. It asks the players for moves until 
-	 * a terminal state is reached. If the player provides an illegal move, then a random move is
-	 * selected for that player.
+	 * a terminal state is reached. Each player has a certain number of milliseconds to decide
+	 * which move it wants to play. If the player fails to provide a move within time or if it
+	 * provides an illegal move, then a random move is selected for that player.
 	 * @param game The StateMachine which represents the concept of the game
 	 * @param players A list of players who will play the game
+	 * @param time The number of seconds each player has to return its next move
 	 * @param verbose If true, the program will print the state of the game.
 	 * @return The scores at the end of the game
 	 */
-	public Map<Player, Integer> play(StateMachine game, List<Player> players, boolean verbose) {
+	public Map<Player, Integer> play(final StateMachine game, List<Player> players, final int time, boolean verbose) {
 		State mState = game.getInitialState(players);
 		
 		if (verbose) System.out.println(mState);
@@ -39,10 +43,60 @@ public class GameManager {
 		// Run the game as long as the state is not terminal.
 		while (!game.isTerminal(mState)) {
 			// Ask each player for a move
-			Map<Player, Move> moves = new HashMap<>(players.size());
-			for (Player p: players) {
-				Move m = p.getNextMove(mState, game);
-				moves.put(p, m);
+			final Map<Player, Move> moves = new HashMap<>();
+			
+			// The threads allow all the players to simultaneously make their decisions.
+			Map<Player, Thread> threads = new HashMap<>();
+			final State tempState = mState.clone();
+			
+			// Create a thread for each player
+			for (final Player p: players) {
+				// Create a new thread which asks for the move
+				Thread t = new Thread() {
+					public void run() {
+						Move m = p.getNextMove(tempState, game, time);
+						moves.put(p, m);
+					}
+				};
+				
+				threads.put(p, t);
+			}
+			
+			// Start each thread, asking the players for their move
+			for (Player p: threads.keySet()) {
+				threads.get(p).start();
+			}
+			
+			// Wait for a given time, allowing the players to make moves
+			int numOfBlocks = 20;
+			for (int i = 0; i < numOfBlocks; i++) {
+				// Sleep for a small time
+				try {
+					TimeUnit.MILLISECONDS.sleep(time/numOfBlocks);
+				} catch (InterruptedException e1) {
+					throw new RuntimeException("The main thread is not able to sleep");
+				}
+				
+				// Check if all threads have already finished. If so, stop pausing
+				boolean allFinished = true;
+				for (Player p: threads.keySet()) {
+					Thread t = threads.get(p);
+					if (t.getState() != Thread.State.TERMINATED) {
+						allFinished = false;
+					}
+				}
+				if (allFinished) break;
+			}
+			
+			// Check if all the players have returned a move. If not, then select a random move
+			// for them.
+			for (Player p: threads.keySet()) {
+				Thread t = threads.get(p);
+				
+				if (t.getState() != Thread.State.TERMINATED) {
+					moves.put(p, selectRandomMove(p, mState, game));
+					log("The player " + p.getName() + " has not responded in time");
+				}
 			}
 			
 			// Get the next game state. If the provided move by a player is invalid, then select
@@ -55,13 +109,10 @@ public class GameManager {
 				} catch (IllegalMoveException e) {
 					// Get the player who provided an illegal move
 					Player p = e.getMove().getPlayer();
-					List<Move> possibleMoves = game.getMoves(mState, p);
-
-					// Pick a random move
-					Move rndMove = possibleMoves.get((new Random()).nextInt(possibleMoves.size()));
 
 					// Update the move that the player provided to be the random move
-					moves.put(p, rndMove);
+					moves.put(p, selectRandomMove(p, mState, game));
+					log("The player " + p.getName() + " provided an illegal move");
 				}
 			}
 			
@@ -71,6 +122,20 @@ public class GameManager {
 		return game.getScores(mState);
 	}
 	
+	private Move selectRandomMove(Player p, State state, StateMachine game) {
+		// Get all moves available to Player p
+		List<Move> possibleMoves = game.getMoves(state, p);
+
+		// Pick a random move
+		Move rndMove = possibleMoves.get((rnd).nextInt(possibleMoves.size()));
+		
+		return rndMove;
+	}
+	
+	private void log(String s) {
+		System.out.println(s);
+	}
+	
 	public static void main(String[] args) {
 		// Initialise game parameters
 		GameManager man = new GameManager();
@@ -78,10 +143,10 @@ public class GameManager {
 		players.add(new ConnectFourHuman("Human"));
 		players.add(new HeuristicPlayer("Heuristic"));
 		StateMachine game = new ConnectFour();
-		
+		int time = 10000;
 		
 		// Start the game
-		Map<Player, Integer> scores = man.play(game, players, true);
+		Map<Player, Integer> scores = man.play(game, players, time, true);
 		
 		// Print the scores
 		for (Player p: scores.keySet()) {

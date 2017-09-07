@@ -20,7 +20,7 @@ public class RandomPlayer extends Player {
 	}
 	
 	@Override
-	public Move getNextMove(State s, StateMachine m) {
+	public Move getNextMove(State s, StateMachine m, int time) {
 		List<Move> moves = m.getMoves(s, this);
 		
 		Random rnd = new Random();

@@ -53,7 +53,7 @@ public class ConnectFour implements StateMachine {
 			
 			if (p == currentPlayer) {
 				// Check if the column index is not out of bounds
-				if (m.index < 0 || m.index > state.board.length) {
+				if (m.index < 0 || m.index >= state.board.length) {
 					throw new IllegalMoveException(state, m);
 				}
 				

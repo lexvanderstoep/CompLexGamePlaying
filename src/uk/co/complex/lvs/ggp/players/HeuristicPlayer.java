@@ -15,8 +15,8 @@ import uk.co.complex.lvs.ggp.StateMachine;
  * The HeuristicPlayer builds upon the MinimaxPlayer. It uses the Minimax algorithm to search the
  * game tree and determine its next move. However, the difference is that the HeuristicPlayer stops
  * searching (meaning it does not search any deeper) the game tree once it has reached a certain
- * depth. At that point, a value is given to the current state by evaluating the state with some 
- * heuristic function.
+ * fixed depth. At that point, a value is given to the current state by evaluating the state with
+ * some heuristic function.
  * @author Lex van der Stoep
  */
 public class HeuristicPlayer extends Player {
@@ -31,7 +31,7 @@ public class HeuristicPlayer extends Player {
 	}
 
 	@Override
-	public Move getNextMove(State s, StateMachine m) {
+	public Move getNextMove(State s, StateMachine m, int time) {
 		List<Player> players = s.getPlayers();
 		if (players.size() != 2) throw new IllegalArgumentException("The Minimax algorithm was "
 				+ "implemented for a two-player game.");

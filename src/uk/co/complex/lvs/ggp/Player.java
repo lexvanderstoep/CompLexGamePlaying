@@ -22,10 +22,12 @@ public abstract class Player {
 	}
 	
 	/**
-	 * The player computes the next move it wants to make given the game and its state.
+	 * The player computes the next move it wants to make given the game and its state. It should
+	 * respond within a given number of milliseconds.
 	 * @param s Current state of the game
 	 * @param m The StateMachine representing the concept of the game
+	 * @param time The number of milliseconds in which the player should respond
 	 * @return The move the players wants to make
 	 */
-	public abstract Move getNextMove(State s, StateMachine m);
+	public abstract Move getNextMove(State s, StateMachine m, int time);
 }

@@ -14,7 +14,7 @@ public class ConnectFourHuman extends Player {
 	}
 
 	@Override
-	public Move getNextMove(State s, StateMachine m) {
+	public Move getNextMove(State s, StateMachine m, int time) {
 		System.out.println("In which column do you want to put a disc (-1 for null move)? ");
 		Scanner in = new Scanner(System.in);
 		int idx = in.nextInt();
