@@ -4,21 +4,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
+import java.util.Random;
 
-import uk.co.complex.lvs.ggp.games.ConnectFour.ConnectFour;
-import uk.co.complex.lvs.ggp.games.ConnectFour.ConnectFourHuman;
-import uk.co.complex.lvs.ggp.games.TicTacToe.TicTacToe;
-import uk.co.complex.lvs.ggp.games.TicTacToe.TicTacToeHuman;
+import uk.co.complex.lvs.ggp.games.connectfour.ConnectFour;
+import uk.co.complex.lvs.ggp.games.connectfour.ConnectFourHuman;
+import uk.co.complex.lvs.ggp.games.tictactoe.TicTacToe;
+import uk.co.complex.lvs.ggp.games.tictactoe.TicTacToeHuman;
 import uk.co.complex.lvs.ggp.players.HeuristicPlayer;
 import uk.co.complex.lvs.ggp.players.MinimaxPlayer;
 import uk.co.complex.lvs.ggp.players.RandomPlayer;
 
+/**
+ * The GameManager is responsible for managing a game played by one or more players. It keeps track
+ * of the game state and asks the players for their moves each turn. Once a game is finished, it
+ * provides the scores of all the players.
+ * @author Lex van der Stoep
+ */
 public class GameManager {
 	
 	/**
 	 * Starts running the given game with the provided players. It asks the players for moves until 
-	 * a terminal state is reached.
+	 * a terminal state is reached. If the player provides an illegal move, then a random move is
+	 * selected for that player.
 	 * @param game The StateMachine which represents the concept of the game
 	 * @param players A list of players who will play the game
 	 * @param verbose If true, the program will print the state of the game.
@@ -38,30 +45,30 @@ public class GameManager {
 				moves.put(p, m);
 			}
 			
-			// Get the next game state. Stop if it is not possible to compute that state (due to 
-			// an illegal move)
-			try {
-				mState = game.getNextState(mState, moves);
-			} catch (IllegalMoveException e) {
-				System.out.println("Illegal move by: " + e.getMove().getPlayer());
-				return null;
+			// Get the next game state. If the provided move by a player is invalid, then select
+			// a random move for that player.
+			boolean validNextState = false;
+			while (!validNextState) {
+				try {
+					mState = game.getNextState(mState, moves);
+					validNextState = true;
+				} catch (IllegalMoveException e) {
+					// Get the player who provided an illegal move
+					Player p = e.getMove().getPlayer();
+					List<Move> possibleMoves = game.getMoves(mState, p);
+
+					// Pick a random move
+					Move rndMove = possibleMoves.get((new Random()).nextInt(possibleMoves.size()));
+
+					// Update the move that the player provided to be the random move
+					moves.put(p, rndMove);
+				}
 			}
 			
 			if (verbose) System.out.println(mState);
 		}
 		
 		return game.getScores(mState);
-	}
-	
-	/**
-	 * Starts running the given game with the provided players. It asks the players for moves until 
-	 * a terminal state is reached.
-	 * @param game The StateMachine which represents the concept of the game
-	 * @param players A list of players who will play the game
-	 * @return The scores at the end of the game
-	 */
-	public Map<Player, Integer> play(StateMachine game, List<Player> players) {
-		return play(game, players, false);
 	}
 	
 	public static void main(String[] args) {
@@ -71,6 +78,7 @@ public class GameManager {
 		players.add(new ConnectFourHuman("Human"));
 		players.add(new HeuristicPlayer("Heuristic"));
 		StateMachine game = new ConnectFour();
+		
 		
 		// Start the game
 		Map<Player, Integer> scores = man.play(game, players, true);

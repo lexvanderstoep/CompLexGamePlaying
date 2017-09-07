@@ -1,4 +1,4 @@
-package uk.co.complex.lvs.ggp.games.TicTacToe;
+package uk.co.complex.lvs.ggp.games.tictactoe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.complex.lvs.ggp.*;
-import uk.co.complex.lvs.ggp.games.TicTacToe.TicTacToeState.BoxState;
+import uk.co.complex.lvs.ggp.games.tictactoe.TicTacToeState.BoxState;
 
 public class TicTacToe implements StateMachine {
 	private final int winScore = 100;

@@ -1,4 +1,4 @@
-package uk.co.complex.lvs.ggp.games.TicTacToe;
+package uk.co.complex.lvs.ggp.games.tictactoe;
 
 import java.util.Scanner;
 

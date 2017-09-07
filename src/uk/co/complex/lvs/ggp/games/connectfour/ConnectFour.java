@@ -1,4 +1,4 @@
-package uk.co.complex.lvs.ggp.games.ConnectFour;
+package uk.co.complex.lvs.ggp.games.connectfour;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import uk.co.complex.lvs.ggp.*;
-import uk.co.complex.lvs.ggp.games.ConnectFour.ConnectFourState.BoxState;
+import uk.co.complex.lvs.ggp.games.connectfour.ConnectFourState.BoxState;
 
 public class ConnectFour implements StateMachine {
 	private final int winScore = 100;

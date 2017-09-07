@@ -1,4 +1,4 @@
-package uk.co.complex.lvs.ggp.games.TicTacToe;
+package uk.co.complex.lvs.ggp.games.tictactoe;
 
 import uk.co.complex.lvs.ggp.Move;
 import uk.co.complex.lvs.ggp.Player;

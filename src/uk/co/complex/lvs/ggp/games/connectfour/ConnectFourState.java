@@ -1,4 +1,4 @@
-package uk.co.complex.lvs.ggp.games.ConnectFour;
+package uk.co.complex.lvs.ggp.games.connectfour;
 
 import java.util.Arrays;
 import java.util.List;
