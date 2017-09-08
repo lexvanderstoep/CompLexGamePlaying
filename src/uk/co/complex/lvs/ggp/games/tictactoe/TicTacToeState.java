@@ -37,8 +37,7 @@ public class TicTacToeState extends State {
 	
 	@Override
 	public String toString() {
-		String s = "";
-		s += (xTurn?"X":"O") + "'s turn\n";
+		String s = "==========\n";
 		for(int i = 0; i < 9; i++) {
 			if (i != 0 & i % 3 == 0) {
 				s += "\n";
@@ -54,7 +53,12 @@ public class TicTacToeState extends State {
 			}
 			s += b;
 		}
-		s += "\n\n";
+		
+		// Print who's turn it is
+		s += "\n";
+		s += "Turn: " + (xTurn?"X":"O") + "\n";
+		s += "==========\n";
+		s += "\n";
 		
 		return s;
 	}

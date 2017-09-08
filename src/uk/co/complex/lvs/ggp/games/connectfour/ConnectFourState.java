@@ -35,8 +35,7 @@ public class ConnectFourState extends State {
 	
 	@Override
 	public String toString() {
-		String s = "";
-		s += (redTurn?"Red":"Yellow") + "'s turn\n";
+		String s = "=======\n";
 		for (int row = board[0].length - 1; row >= 0; row--) {
 			String line = "";
 			for (int col = 0; col < board.length; col++) {
@@ -52,7 +51,8 @@ public class ConnectFourState extends State {
 			line += "\n";
 			s += line;
 		}
-		s += "\n";
+		s +=  "Turn: "+ (redTurn?"R":"Y") + "\n";
+		s += "=======\n";
 		
 		return s;
 	}

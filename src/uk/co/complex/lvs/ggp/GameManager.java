@@ -14,6 +14,7 @@ import uk.co.complex.lvs.ggp.games.tictactoe.TicTacToeHuman;
 import uk.co.complex.lvs.ggp.players.HeuristicPlayer;
 import uk.co.complex.lvs.ggp.players.MinimaxPlayer;
 import uk.co.complex.lvs.ggp.players.RandomPlayer;
+import uk.co.complex.lvs.ggp.players.VariableDepthPlayer;
 
 /**
  * The GameManager is responsible for managing a game played by one or more players. It keeps track
@@ -140,10 +141,10 @@ public class GameManager {
 		// Initialise game parameters
 		GameManager man = new GameManager();
 		List<Player> players = new ArrayList<>(2);
-		players.add(new ConnectFourHuman("Human"));
+		players.add(new VariableDepthPlayer("VD"));
 		players.add(new HeuristicPlayer("Heuristic"));
 		StateMachine game = new ConnectFour();
-		int time = 10000;
+		int time = 5000;
 		
 		// Start the game
 		Map<Player, Integer> scores = man.play(game, players, time, true);
