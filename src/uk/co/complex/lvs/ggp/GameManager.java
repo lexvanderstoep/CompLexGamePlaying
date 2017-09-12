@@ -11,7 +11,8 @@ import uk.co.complex.lvs.ggp.games.connectfour.ConnectFour;
 import uk.co.complex.lvs.ggp.games.connectfour.ConnectFourHuman;
 import uk.co.complex.lvs.ggp.games.tictactoe.TicTacToe;
 import uk.co.complex.lvs.ggp.games.tictactoe.TicTacToeHuman;
-import uk.co.complex.lvs.ggp.players.HeuristicPlayer;
+import uk.co.complex.lvs.ggp.players.FixedDepthPlayer;
+import uk.co.complex.lvs.ggp.players.MCTSPlayer;
 import uk.co.complex.lvs.ggp.players.MinimaxPlayer;
 import uk.co.complex.lvs.ggp.players.RandomPlayer;
 import uk.co.complex.lvs.ggp.players.VariableDepthPlayer;
@@ -142,9 +143,9 @@ public class GameManager {
 		GameManager man = new GameManager();
 		List<Player> players = new ArrayList<>(2);
 		players.add(new VariableDepthPlayer("VD"));
-		players.add(new HeuristicPlayer("Heuristic"));
+		players.add(new MCTSPlayer("MCTS"));
 		StateMachine game = new ConnectFour();
-		int time = 5000;
+		int time = 10000;
 		
 		// Start the game
 		Map<Player, Integer> scores = man.play(game, players, time, true);

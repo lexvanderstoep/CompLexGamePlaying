@@ -36,7 +36,7 @@ public interface StateMachine {
 	/**
 	 * Computes the score for each of the players
 	 * @param s Current state
-	 * @return
+	 * @return A mapping from each to player to its corresponding score
 	 */
 	public Map<Player, Integer> getScores(State s);
 	

@@ -12,21 +12,21 @@ import uk.co.complex.lvs.ggp.State;
 import uk.co.complex.lvs.ggp.StateMachine;
 
 /**
- * The HeuristicPlayer builds upon the MinimaxPlayer. It uses the Minimax algorithm to search the
- * game tree and determine its next move. However, the difference is that the HeuristicPlayer stops
- * searching (meaning it does not search any deeper) the game tree once it has reached a certain
+ * The FixedDepthPlayer builds upon the MinimaxPlayer. It uses the Minimax algorithm to search the
+ * game tree and determine its next move. However, the difference is that the FixedDepthPlayer
+ * stops searching (meaning it does not search any deeper) the game tree once it has reached a certain
  * fixed depth. At that point, a value is given to the current state by evaluating the state with
  * some heuristic function.
  * @author Lex van der Stoep
  */
-public class HeuristicPlayer extends Player {
+public class FixedDepthPlayer extends Player {
 	private static final int MAX_DEPTH = 4;
 	private static final int NUM_OF_WALKS = 10;
 
 	private Move move;
 	private Random rnd = new Random();
 	
-	public HeuristicPlayer(String name) {
+	public FixedDepthPlayer(String name) {
 		super(name);
 	}
 

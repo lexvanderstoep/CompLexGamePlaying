@@ -12,9 +12,9 @@ import uk.co.complex.lvs.ggp.State;
 import uk.co.complex.lvs.ggp.StateMachine;
 
 /**
- * The VariableDepthPlayer builds upon the HeuristicPlayer. It uses the Minimax algorithm to search
- * the game tree (until a certain depth) and determines its next move. When that certain is
- * reached, it evaluates the state there using a heuristic function. HeuristicPlayer is a
+ * The VariableDepthPlayer builds upon the FixedDepthPlayer. It uses the Minimax algorithm to
+ * search the game tree (until a certain depth) and determines its next move. When that certain is
+ * reached, it evaluates the state there using a heuristic function. FixedDepthPlayer is a
  * fixed-depth player, meaning that the depth until it searches is constant. VariableDepthPlayer
  * uses iterative deepening to search the game tree. It first does a fixed-depth search of the
  * tree with depth 1, then with depth 2, and so forth; until the player does not have enough time
