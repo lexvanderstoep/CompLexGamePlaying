@@ -259,4 +259,10 @@ public class MCTSPlayer extends Player {
 			}
 		}
 	}
+
+
+	@Override
+	public Player clone() {
+		return new MCTSPlayer(getName());
+	}
 }

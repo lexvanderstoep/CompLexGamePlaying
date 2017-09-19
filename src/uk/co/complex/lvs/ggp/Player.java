@@ -5,7 +5,7 @@ package uk.co.complex.lvs.ggp;
  * when asked for it by a game manager. A game player can be artificial as well as human.
  * @author Lex van der Stoep
  */
-public abstract class Player {
+public abstract class Player implements Cloneable {
 	private String mName;
 	
 	public Player(String name) {
@@ -20,6 +20,9 @@ public abstract class Player {
 	public String toString() {
 		return getName();
 	}
+	
+	@Override
+	public abstract Player clone();
 	
 	/**
 	 * The player computes the next move it wants to make given the game and its state. It should

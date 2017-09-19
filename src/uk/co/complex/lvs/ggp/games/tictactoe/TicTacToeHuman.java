@@ -27,4 +27,9 @@ public class TicTacToeHuman extends Player {
 		return new TicTacToeMove(this, idx);
 	}
 
+	@Override
+	public Player clone() {
+		return new TicTacToeHuman(getName());
+	}
+
 }

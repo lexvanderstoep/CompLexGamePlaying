@@ -24,7 +24,7 @@ import uk.co.complex.lvs.ggp.StateMachine;
 public class VariableDepthPlayer extends Player {
 	private long startTime;
 	private long totTime;
-	private static int MAX_DEPTH = 1;					// The max depth of the game tree search
+	private int MAX_DEPTH = 1;							// The max depth of the game tree search
 														// (is altered during iterative deepening)
 	private static final int NUM_OF_WALKS = 10;			// The number of random walks
 	private static final long minTimeToRespond = 100;	// The number of milliseconds which the
@@ -191,5 +191,10 @@ public class VariableDepthPlayer extends Player {
 	
 	private long getTimeLeft() {
 		return (startTime + totTime - System.currentTimeMillis());
+	}
+
+	@Override
+	public Player clone() {
+		return new VariableDepthPlayer(getName());
 	}
 }

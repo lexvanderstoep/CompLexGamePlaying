@@ -22,4 +22,9 @@ public class ConnectFourHuman extends Player {
 		return new ConnectFourMove(this, idx);
 	}
 
+	@Override
+	public Player clone() {
+		return new ConnectFourHuman(getName());
+	}
+
 }

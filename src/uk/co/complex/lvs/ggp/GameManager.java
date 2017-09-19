@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import uk.co.complex.lvs.ggp.forms.GameOutput;
 import uk.co.complex.lvs.ggp.games.connectfour.ConnectFour;
 import uk.co.complex.lvs.ggp.games.connectfour.ConnectFourHuman;
 import uk.co.complex.lvs.ggp.games.tictactoe.TicTacToe;
@@ -34,13 +35,13 @@ public class GameManager {
 	 * @param game The StateMachine which represents the concept of the game
 	 * @param players A list of players who will play the game
 	 * @param time The number of seconds each player has to return its next move
-	 * @param verbose If true, the program will print the state of the game.
+	 * @param output The GameOutput object to which game information can be send
 	 * @return The scores at the end of the game
 	 */
-	public Map<Player, Integer> play(final StateMachine game, List<Player> players, final int time, boolean verbose) {
+	public Map<Player, Integer> play(final StateMachine game, List<Player> players, final int time, GameOutput output) {
 		State mState = game.getInitialState(players);
 		
-		if (verbose) System.out.println(mState);
+		output.print(mState);
 		
 		// Run the game as long as the state is not terminal.
 		while (!game.isTerminal(mState)) {
@@ -97,7 +98,7 @@ public class GameManager {
 				
 				if (t.getState() != Thread.State.TERMINATED) {
 					moves.put(p, selectRandomMove(p, mState, game));
-					log("The player " + p.getName() + " has not responded in time");
+					output.log("The player " + p.getName() + " has not responded in time");
 				}
 			}
 			
@@ -114,14 +115,45 @@ public class GameManager {
 
 					// Update the move that the player provided to be the random move
 					moves.put(p, selectRandomMove(p, mState, game));
-					log("The player " + p.getName() + " provided an illegal move");
+					output.log("The player " + p.getName() + " provided an illegal move");
 				}
 			}
 			
-			if (verbose) System.out.println(mState);
+			output.print(mState);
+		}
+		
+		Map<Player, Integer> scores = game.getScores(mState);
+
+		// Print the scores
+		for (Player p : scores.keySet()) {
+			output.log("Player " + p + " scored " + scores.get(p) + " points");
 		}
 		
 		return game.getScores(mState);
+	}
+	
+	/**
+	 * Starts running the given game with the provided players. It asks the players for moves until 
+	 * a terminal state is reached. Each player has a certain number of milliseconds to decide
+	 * which move it wants to play. If the player fails to provide a move within time or if it
+	 * provides an illegal move, then a random move is selected for that player.
+	 * @param game The StateMachine which represents the concept of the game
+	 * @param players A list of players who will play the game
+	 * @param time The number of seconds each player has to return its next move
+	 * @return The scores at the end of the game
+	 */
+	public Map<Player, Integer> play(final StateMachine game, List<Player> players, final int time) {
+		// Call the regular GameManager.play method. The GameOutput is the System console.
+		return play(game, players, time, new GameOutput(){
+			@Override
+			public void print(Object message) {
+				System.out.println(message);
+			}
+			@Override
+			public void log(Object message) {
+				System.out.println(message);
+			}
+		});
 	}
 	
 	private Move selectRandomMove(Player p, State state, StateMachine game) {
@@ -134,25 +166,16 @@ public class GameManager {
 		return rndMove;
 	}
 	
-	private void log(String s) {
-		System.out.println(s);
-	}
-	
 	public static void main(String[] args) {
 		// Initialise game parameters
 		GameManager man = new GameManager();
 		List<Player> players = new ArrayList<>(2);
-		players.add(new VariableDepthPlayer("VD"));
-		players.add(new MCTSPlayer("MCTS"));
+		players.add(new ConnectFourHuman("Paul"));
+		players.add(new FixedDepthPlayer("Lex"));
 		StateMachine game = new ConnectFour();
-		int time = 10000;
+		int time = 3000;
 		
 		// Start the game
-		Map<Player, Integer> scores = man.play(game, players, time, true);
-		
-		// Print the scores
-		for (Player p: scores.keySet()) {
-			System.out.println("Player " + p + " scored " + scores.get(p) + " points");
-		}
+		Map<Player, Integer> scores = man.play(game, players, time);
 	}
 }

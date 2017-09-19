@@ -29,4 +29,9 @@ public class RandomPlayer extends Player {
 		return moves.get(idx);
 	}
 
+	@Override
+	public Player clone() {
+		return new RandomPlayer(getName());
+	}
+
 }

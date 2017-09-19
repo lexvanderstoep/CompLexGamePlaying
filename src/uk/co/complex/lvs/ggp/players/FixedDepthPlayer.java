@@ -156,4 +156,9 @@ public class FixedDepthPlayer extends Player {
 	private Move getRandomMove(List<Move> moves) {
 		return moves.get(rnd.nextInt(moves.size()));
 	}
+
+	@Override
+	public Player clone() {
+		return new FixedDepthPlayer(getName());
+	}
 }

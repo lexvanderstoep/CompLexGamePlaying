@@ -100,4 +100,9 @@ public class MinimaxPlayer extends Player {
 			maximin = val;
 		}
 	}
+
+	@Override
+	public Player clone() {
+		return new MinimaxPlayer(getName());
+	}
 }
