@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 import uk.co.complex.lvs.ggp.forms.GameOutput;
 import uk.co.complex.lvs.ggp.games.connectfour.ConnectFour;
 import uk.co.complex.lvs.ggp.games.connectfour.ConnectFourHuman;
+import uk.co.complex.lvs.ggp.games.flip.Flip;
+import uk.co.complex.lvs.ggp.games.flip.FlipHuman;
 import uk.co.complex.lvs.ggp.games.tictactoe.TicTacToe;
 import uk.co.complex.lvs.ggp.games.tictactoe.TicTacToeHuman;
 import uk.co.complex.lvs.ggp.players.FixedDepthPlayer;
@@ -98,7 +100,7 @@ public class GameManager {
 				
 				if (t.getState() != Thread.State.TERMINATED) {
 					moves.put(p, selectRandomMove(p, mState, game));
-					output.log("The player " + p.getName() + " has not responded in time");
+					output.log("The player " + p.getName() + " is not alive anymore");
 				}
 			}
 			
@@ -170,9 +172,9 @@ public class GameManager {
 		// Initialise game parameters
 		GameManager man = new GameManager();
 		List<Player> players = new ArrayList<>(2);
-		players.add(new ConnectFourHuman("Paul"));
-		players.add(new FixedDepthPlayer("Lex"));
-		StateMachine game = new ConnectFour();
+		players.add(new VariableDepthPlayer("VDP"));
+		players.add(new RandomPlayer("Random"));
+		StateMachine game = new Flip();
 		int time = 3000;
 		
 		// Start the game
