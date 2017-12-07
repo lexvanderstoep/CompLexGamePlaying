@@ -32,3 +32,11 @@ pom.xml.tag
 
 .gitignore~Initial project set-up
 /bin/
+
+# IntelliJ IDEA
+.idea/
+out/
+*.iml
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
