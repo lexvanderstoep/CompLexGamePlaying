@@ -20,6 +20,7 @@ import uk.co.complex.lvs.ggp.StateMachine;
 import uk.co.complex.lvs.ggp.forms.elements.DataItem;
 import uk.co.complex.lvs.ggp.games.connectfour.ConnectFour;
 import uk.co.complex.lvs.ggp.games.connectfour.ConnectFourHuman;
+import uk.co.complex.lvs.ggp.games.flip.Flip;
 import uk.co.complex.lvs.ggp.games.tictactoe.TicTacToe;
 import uk.co.complex.lvs.ggp.players.FixedDepthPlayer;
 import uk.co.complex.lvs.ggp.players.MCTSPlayer;
@@ -51,7 +52,8 @@ public class GameManagerUI extends JPanel implements ActionListener, GameOutput 
 		
 		// Add game selection box
 		DataItem[] games = new DataItem[] {new DataItem("Tic Tac Toe", new TicTacToe()),
-										   new DataItem("Connect Four", new ConnectFour())};
+										   new DataItem("Connect Four", new ConnectFour()),
+										   new DataItem("Flip", new Flip())};
 		gameSelector = new JComboBox<>(games);
 		c.gridx = 0;
 		c.gridy = 1;
