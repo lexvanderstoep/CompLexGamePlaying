@@ -1,20 +1,21 @@
 package uk.co.complex.lvs.ggp.forms;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.text.DefaultCaret;
 
+import com.sun.corba.se.impl.orbutil.graph.Graph;
 import uk.co.complex.lvs.ggp.GameManager;
+import uk.co.complex.lvs.ggp.GraphicalState;
 import uk.co.complex.lvs.ggp.Player;
 import uk.co.complex.lvs.ggp.StateMachine;
 import uk.co.complex.lvs.ggp.forms.elements.DataItem;
@@ -35,6 +36,7 @@ public class GameManagerUI extends JPanel implements ActionListener, GameOutput 
 	private SpinnerNumberModel timeModel;
 	private JTextArea stateText;
 	private JTextArea logText;
+	private GridBagConstraints c = new GridBagConstraints();
 
 	public GameManagerUI(){
 		super(new GridBagLayout());
@@ -43,7 +45,7 @@ public class GameManagerUI extends JPanel implements ActionListener, GameOutput 
 	}
 	
 	private void initComponents() {
-		GridBagConstraints c = new GridBagConstraints();
+		//GridBagConstraints c = new GridBagConstraints();
 		
 		// Add game label
 		c.gridx = 0;
@@ -53,7 +55,7 @@ public class GameManagerUI extends JPanel implements ActionListener, GameOutput 
 		// Add game selection box
 		DataItem[] games = new DataItem[] {new DataItem("Tic Tac Toe", new TicTacToe()),
 										   new DataItem("Connect Four", new ConnectFour()),
-										   new DataItem("Flip", new Flip())};
+										   new DataItem("Flip!", new Flip())};
 		gameSelector = new JComboBox<>(games);
 		c.gridx = 0;
 		c.gridy = 1;
@@ -138,10 +140,17 @@ public class GameManagerUI extends JPanel implements ActionListener, GameOutput 
 	}
 	
 	@Override
-	public void print(Object message) {
-		String current = stateText.getText();
-		if (!current.equals("")) current += "\n";
-		stateText.setText(current + message.toString());
+	public void print(Object o) {
+	    if (o instanceof GraphicalState) {
+	        GraphicalState gs = (GraphicalState) o;
+	        Graphics g = stateText.getGraphics();
+	        Image img = gs.toImage(100, 100);
+	        g.drawImage(img, 10, 10, this);
+        } else {
+            String current = stateText.getText();
+            if (!current.equals("")) current += "\n";
+            stateText.setText(current + o.toString());
+        }
 	}
 
 	@Override
@@ -178,12 +187,16 @@ public class GameManagerUI extends JPanel implements ActionListener, GameOutput 
 		
 		// Get the time
 		final int time = (int) timeModel.getValue();
+		final Map<Player, Integer> times = new HashMap<>();
+		for (Player p: players) {
+			times.put(p, time);
+		}
 		
 		// Play the game (start a new thread for running the game)
 		Thread t = new Thread() {
 			@Override
 			public void run() {
-				gm.play(game, players, time, GameManagerUI.this);
+				gm.play(game, players, times, GameManagerUI.this);
 			}
 		};
 		t.start();

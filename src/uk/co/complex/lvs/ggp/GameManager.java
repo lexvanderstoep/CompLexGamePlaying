@@ -1,10 +1,6 @@
 package uk.co.complex.lvs.ggp;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import uk.co.complex.lvs.ggp.forms.GameOutput;
@@ -28,6 +24,7 @@ import uk.co.complex.lvs.ggp.players.VariableDepthPlayer;
  */
 public class GameManager {
 	private final Random rnd = new Random();
+	private static final int CHECK_TIME = 200; // check for players' responses every 200ms
 	
 	/**
 	 * Starts running the given game with the provided players. It asks the players for moves until 
@@ -36,14 +33,23 @@ public class GameManager {
 	 * provides an illegal move, then a random move is selected for that player.
 	 * @param game The StateMachine which represents the concept of the game
 	 * @param players A list of players who will play the game
-	 * @param time The number of seconds each player has to return its next move
+	 * @param times The number of seconds each player has to return its next move
 	 * @param output The GameOutput object to which game information can be send
 	 * @return The scores at the end of the game
 	 */
-	public Map<Player, Integer> play(final StateMachine game, List<Player> players, final int time, GameOutput output) {
+	public Map<Player, Integer> play(final StateMachine game, List<Player> players,
+									 Map<Player, Integer> times, GameOutput output) {
+		if (!times.keySet().containsAll(players)) {
+			throw new IllegalArgumentException("Not each player has been assigned a time");
+		}
+
 		State mState = game.getInitialState(players);
-		
+
 		output.print(mState);
+
+		int minTime = times.values().stream().min(Comparator.naturalOrder()).get();
+		int maxTime = times.values().stream().max(Comparator.naturalOrder()).get();
+		int checkInterval = Math.min(minTime, CHECK_TIME);
 		
 		// Run the game as long as the state is not terminal.
 		while (!game.isTerminal(mState)) {
@@ -57,40 +63,40 @@ public class GameManager {
 			// Create a thread for each player
 			for (final Player p: players) {
 				// Create a new thread which asks for the move
-				Thread t = new Thread() {
-					public void run() {
-						Move m = p.getNextMove(tempState, game, time);
-						moves.put(p, m);
-					}
-				};
-				
+				Thread t = new Thread(() -> {
+                    Move m = p.getNextMove(tempState, game, times.get(p));
+                    moves.put(p, m);
+                });
+				t.setDaemon(true);
 				threads.put(p, t);
 			}
 			
 			// Start each thread, asking the players for their move
-			for (Player p: threads.keySet()) {
-				threads.get(p).start();
-			}
-			
+			threads.forEach((player,thread)->thread.start());
+
 			// Wait for a given time, allowing the players to make moves
-			int numOfBlocks = 20;
-			for (int i = 0; i < numOfBlocks; i++) {
+			int totWaitedTime = 0;
+			while(totWaitedTime < maxTime) {
 				// Sleep for a small time
 				try {
-					TimeUnit.MILLISECONDS.sleep(time/numOfBlocks);
+					TimeUnit.MILLISECONDS.sleep(checkInterval);
+					totWaitedTime += checkInterval;
 				} catch (InterruptedException e1) {
 					throw new RuntimeException("The main thread is not able to sleep");
 				}
 				
 				// Check if all threads have already finished. If so, stop pausing
-				boolean allFinished = true;
-				for (Player p: threads.keySet()) {
-					Thread t = threads.get(p);
-					if (t.getState() != Thread.State.TERMINATED) {
-						allFinished = false;
+				boolean allFinished = threads.values().stream()
+						.allMatch(thread -> thread.getState()== Thread.State.TERMINATED);
+				if (allFinished) break;
+
+				for (Player p: players) {
+					int timetoRespond = times.get(p);
+
+					if (totWaitedTime > timetoRespond) {
+						threads.get(p).interrupt();
 					}
 				}
-				if (allFinished) break;
 			}
 			
 			// Check if all the players have returned a move. If not, then select a random move
@@ -99,8 +105,9 @@ public class GameManager {
 				Thread t = threads.get(p);
 				
 				if (t.getState() != Thread.State.TERMINATED) {
+					t.interrupt();
 					moves.put(p, selectRandomMove(p, mState, game));
-					output.log("The player " + p.getName() + " is not alive anymore");
+					output.log("The player " + p.getName() + " did not respond in time");
 				}
 			}
 			
@@ -141,12 +148,13 @@ public class GameManager {
 	 * provides an illegal move, then a random move is selected for that player.
 	 * @param game The StateMachine which represents the concept of the game
 	 * @param players A list of players who will play the game
-	 * @param time The number of seconds each player has to return its next move
+	 * @param times The number of seconds each player has to return its next move
 	 * @return The scores at the end of the game
 	 */
-	public Map<Player, Integer> play(final StateMachine game, List<Player> players, final int time) {
+	public Map<Player, Integer> play(final StateMachine game, List<Player> players,
+									 Map<Player, Integer> times) {
 		// Call the regular GameManager.play method. The GameOutput is the System console.
-		return play(game, players, time, new GameOutput(){
+		return play(game, players, times, new GameOutput(){
 			@Override
 			public void print(Object message) {
 				System.out.println(message);
@@ -172,12 +180,16 @@ public class GameManager {
 		// Initialise game parameters
 		GameManager man = new GameManager();
 		List<Player> players = new ArrayList<>(2);
-		players.add(new VariableDepthPlayer("VDP"));
-		players.add(new RandomPlayer("Random"));
-		StateMachine game = new Flip();
-		int time = 3000;
+		Player hennes = new ConnectFourHuman("Hennes");
+		Player lex = new VariableDepthPlayer("Lex");
+		players.add(hennes);
+		players.add(lex);
+		StateMachine game = new ConnectFour();
+		Map<Player, Integer> times = new HashMap<>();
+		times.put(hennes, 100_000);
+		times.put(lex, 10_000);
 		
 		// Start the game
-		Map<Player, Integer> scores = man.play(game, players, time);
+		Map<Player, Integer> scores = man.play(game, players, times);
 	}
 }

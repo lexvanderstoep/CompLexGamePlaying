@@ -1,9 +1,6 @@
 package uk.co.complex.lvs.ggp.games.flip;
 
-import uk.co.complex.lvs.ggp.Move;
-import uk.co.complex.lvs.ggp.Player;
-import uk.co.complex.lvs.ggp.State;
-import uk.co.complex.lvs.ggp.StateMachine;
+import uk.co.complex.lvs.ggp.*;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -12,7 +9,7 @@ import java.util.Scanner;
  * Represents a human player. This player class will interact using the console to determine the
  * next move (asks the user).
  */
-public class FlipHuman extends Player {
+public class FlipHuman extends Player{
 
     public FlipHuman(String name) {
         super(name);
