@@ -3,6 +3,7 @@ package uk.co.complex.lvs.ggp.games.flip;
 import uk.co.complex.lvs.ggp.*;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -22,6 +23,12 @@ public class FlipHuman extends Player{
 
     @Override
     public Move getNextMove(State s, StateMachine m, int time) {
+
+        List<Move> allMoves = m.getMoves(s, this);
+        if (allMoves.size() == 1)  {
+            return allMoves.get(0);
+        }
+
         int x,y;
         try {
             FlipState state = (FlipState) s;

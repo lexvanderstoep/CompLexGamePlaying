@@ -1,5 +1,6 @@
 package uk.co.complex.lvs.ggp.games.tictactoe;
 
+import java.util.List;
 import java.util.Scanner;
 
 import uk.co.complex.lvs.ggp.*;
@@ -17,6 +18,11 @@ public class TicTacToeHuman extends Player {
 
 	@Override
 	public Move getNextMove(State s, StateMachine m, int time) {
+		List<Move> allMoves = m.getMoves(s, this);
+		if (allMoves.size() == 1) {
+			return allMoves.get(0);
+		}
+
 		System.out.println("In which box do you want to put a mark (-1 for null move)? ");
 		Scanner in = new Scanner(System.in);
 		int idx = in.nextInt();

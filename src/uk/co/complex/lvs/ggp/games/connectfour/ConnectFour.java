@@ -17,7 +17,7 @@ public class ConnectFour implements StateMachine {
 	public List<Move> getMoves(State s, Player p) {
 		ConnectFourState state = (ConnectFourState) s;
 		List<Player> players = state.getPlayers();
-		Player currentPlayer = state.redTurn?players.get(0):players.get(1);
+		Player currentPlayer = state.xTurn?players.get(0):players.get(1);
 		
 		List<Move> moves = new ArrayList<Move>();
 		
@@ -43,7 +43,7 @@ public class ConnectFour implements StateMachine {
 	public State getNextState(State s, Map<Player, Move> moves) throws IllegalMoveException {
 		ConnectFourState state = (ConnectFourState) s.clone();
 		List<Player> players = state.getPlayers();
-		Player currentPlayer = state.redTurn?players.get(0):players.get(1);
+		Player currentPlayer = state.xTurn?players.get(0):players.get(1);
 		
 		// Check the moves for all the players. If it is not the player's turn, then the move 
 		// should be the null move. If it is the player's turn, then the move should be 
@@ -72,7 +72,7 @@ public class ConnectFour implements StateMachine {
 				}
 				
 				// Update the board
-				state.board[m.index][row] = state.redTurn?BoxState.R:BoxState.Y;
+				state.board[m.index][row] = state.xTurn?BoxState.X:BoxState.O;
 			} else {
 				// If it is not the player's turn, then check if it's the null move
 				if (m.index != -1) {
@@ -82,7 +82,7 @@ public class ConnectFour implements StateMachine {
 		}
 		
 		// Change who's turn it is
-		state.redTurn = !state.redTurn;
+		state.xTurn = !state.xTurn;
 		
 		return state;
 	}
@@ -211,10 +211,10 @@ public class ConnectFour implements StateMachine {
 			}
 		}
 		
-		if (winner == BoxState.R) {
+		if (winner == BoxState.X) {
 			scores.put(players.get(0), winScore);
 			scores.put(players.get(1), loseScore);
-		} else if (winner == BoxState.Y) {
+		} else if (winner == BoxState.O) {
 			scores.put(players.get(0), loseScore);
 			scores.put(players.get(1), winScore);
 		}
@@ -237,17 +237,17 @@ public class ConnectFour implements StateMachine {
 		int Rs = 0;
 		int Ys = 0;
 		
-		if (board[c1][r1] == BoxState.R) Rs++;
-		if (board[c1][r1] == BoxState.Y) Ys++;
-		if (board[c2][r2] == BoxState.R) Rs++;
-		if (board[c2][r2] == BoxState.Y) Ys++;
-		if (board[c3][r3] == BoxState.R) Rs++;
-		if (board[c3][r3] == BoxState.Y) Ys++;
-		if (board[c4][r4] == BoxState.R) Rs++;
-		if (board[c4][r4] == BoxState.Y) Ys++;
+		if (board[c1][r1] == BoxState.X) Rs++;
+		if (board[c1][r1] == BoxState.O) Ys++;
+		if (board[c2][r2] == BoxState.X) Rs++;
+		if (board[c2][r2] == BoxState.O) Ys++;
+		if (board[c3][r3] == BoxState.X) Rs++;
+		if (board[c3][r3] == BoxState.O) Ys++;
+		if (board[c4][r4] == BoxState.X) Rs++;
+		if (board[c4][r4] == BoxState.O) Ys++;
 		
-		if (Rs == 4) return BoxState.R;
-		if (Ys == 4) return BoxState.Y;
+		if (Rs == 4) return BoxState.X;
+		if (Ys == 4) return BoxState.O;
 		return BoxState.empty;
 	}
 }

@@ -30,7 +30,9 @@ public class MinimaxPlayer extends Player {
 		if (moves.size() == 1) return moves.get(0);
 		
 		// Run the Minimax algorithm to determine moves
-		return maximin(s, m, Integer.MAX_VALUE).bestMove;
+		MiniMaxResult selectedMove = maximin(s, m, Integer.MAX_VALUE);
+
+		return selectedMove.bestMove;
 	}
 	
 	/**

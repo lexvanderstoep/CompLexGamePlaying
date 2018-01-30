@@ -10,16 +10,16 @@ public class ConnectFourState extends State {
 	/* The Connect Four board will be 7x6 (7 columns, 6 rows). The index of the bottom-left element
 	 * is (0, 0). The index of the top-right element is (6, 5).
 	 * 
-	 * The first player is R (red), the second player is Y (yellow).
+	 * The first player is X, the second player is O.
 	 */
 	
 	BoxState[][] board;
-	boolean redTurn;
+	boolean xTurn;
 
 	public ConnectFourState(List<Player> players) {
 		super(players);
 		board = new BoxState[7][6];
-		redTurn = true;
+		xTurn = true;
 		for (BoxState[] column : board) Arrays.fill(column, BoxState.empty);
 	}
 
@@ -29,7 +29,7 @@ public class ConnectFourState extends State {
 		for (int i = 0; i < board.length; i++) {
 			System.arraycopy(board[i], 0, newState.board[i], 0, newState.board[i].length);
 		}
-		newState.redTurn = redTurn;
+		newState.xTurn = xTurn;
 		return newState;
 	}
 	
@@ -42,23 +42,23 @@ public class ConnectFourState extends State {
 				switch(board[col][row]) {
 				case empty:	line += " ";
 							break;
-				case R:		line += "R";
+				case X:		line += "X";
 							break;
-				case Y:		line += "Y";
+				case O:		line += "O";
 							break;
 				}
 			}
 			line += "\n";
 			s += line;
 		}
-		s +=  "Turn: "+ (redTurn?"R":"Y") + "\n";
+		s +=  "Turn: "+ (xTurn?getPlayers().get(0):getPlayers().get(1)) + "\n";
 		s += "=======\n";
 		
 		return s;
 	}
 	
 	public enum BoxState {
-		empty, R, Y
+		empty, X, O
 	}
 
 }

@@ -13,10 +13,9 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.text.DefaultCaret;
 
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import uk.co.complex.lvs.ggp.GameManager;
-import uk.co.complex.lvs.ggp.GraphicalState;
 import uk.co.complex.lvs.ggp.Player;
+import uk.co.complex.lvs.ggp.State;
 import uk.co.complex.lvs.ggp.StateMachine;
 import uk.co.complex.lvs.ggp.forms.elements.DataItem;
 import uk.co.complex.lvs.ggp.games.connectfour.ConnectFour;
@@ -140,24 +139,17 @@ public class GameManagerUI extends JPanel implements ActionListener, GameOutput 
 	}
 	
 	@Override
-	public void print(Object o) {
-	    if (o instanceof GraphicalState) {
-	        GraphicalState gs = (GraphicalState) o;
-	        Graphics g = stateText.getGraphics();
-	        Image img = gs.toImage(100, 100);
-	        g.drawImage(img, 10, 10, this);
-        } else {
-            String current = stateText.getText();
-            if (!current.equals("")) current += "\n";
-            stateText.setText(current + o.toString());
-        }
+	public void print(State s) {
+		String current = stateText.getText();
+		if (!current.equals("")) current += "\n";
+		stateText.setText(current + s.toString());
 	}
 
 	@Override
-	public void log(Object message) {
+	public void log(String message) {
 		String current = logText.getText();
 		if (!current.equals("")) current += "\n";
-		logText.setText(current + message.toString());
+		logText.setText(current + message);
 	}
 
 	@Override
@@ -193,12 +185,7 @@ public class GameManagerUI extends JPanel implements ActionListener, GameOutput 
 		}
 		
 		// Play the game (start a new thread for running the game)
-		Thread t = new Thread() {
-			@Override
-			public void run() {
-				gm.play(game, players, times, GameManagerUI.this);
-			}
-		};
+		Thread t = new Thread(() -> gm.play(game, players, times, GameManagerUI.this));
 		t.start();
 	}
 	

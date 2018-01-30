@@ -10,11 +10,7 @@ import uk.co.complex.lvs.ggp.games.flip.Flip;
 import uk.co.complex.lvs.ggp.games.flip.FlipHuman;
 import uk.co.complex.lvs.ggp.games.tictactoe.TicTacToe;
 import uk.co.complex.lvs.ggp.games.tictactoe.TicTacToeHuman;
-import uk.co.complex.lvs.ggp.players.FixedDepthPlayer;
-import uk.co.complex.lvs.ggp.players.MCTSPlayer;
-import uk.co.complex.lvs.ggp.players.MinimaxPlayer;
-import uk.co.complex.lvs.ggp.players.RandomPlayer;
-import uk.co.complex.lvs.ggp.players.VariableDepthPlayer;
+import uk.co.complex.lvs.ggp.players.*;
 
 /**
  * The GameManager is responsible for managing a game played by one or more players. It keeps track
@@ -156,11 +152,11 @@ public class GameManager {
 		// Call the regular GameManager.play method. The GameOutput is the System console.
 		return play(game, players, times, new GameOutput(){
 			@Override
-			public void print(Object message) {
-				System.out.println(message);
+			public void print(State state) {
+				System.out.println(state);
 			}
 			@Override
-			public void log(Object message) {
+			public void log(String message) {
 				System.out.println(message);
 			}
 		});
@@ -180,14 +176,14 @@ public class GameManager {
 		// Initialise game parameters
 		GameManager man = new GameManager();
 		List<Player> players = new ArrayList<>(2);
-		Player hennes = new ConnectFourHuman("Hennes");
-		Player lex = new VariableDepthPlayer("Lex");
-		players.add(hennes);
-		players.add(lex);
-		StateMachine game = new ConnectFour();
+		Player one = new VariableDepthPlayer("VD1");
+		Player two = new VariableDepthPlayer("VD2");
+		players.add(one);
+		players.add(two);
+		StateMachine game = new Flip();
 		Map<Player, Integer> times = new HashMap<>();
-		times.put(hennes, 100_000);
-		times.put(lex, 10_000);
+		times.put(one, 2_000);
+		times.put(two, 0_500);
 		
 		// Start the game
 		Map<Player, Integer> scores = man.play(game, players, times);

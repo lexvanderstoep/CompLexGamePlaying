@@ -20,7 +20,7 @@ import uk.co.complex.lvs.ggp.StateMachine;
  * @author Lex van der Stoep
  */
 public class FixedDepthPlayer extends Player {
-	private static final int MAX_DEPTH = 4;
+	private static final int MAX_DEPTH = 2;
 	private static final int NUM_OF_WALKS = 10;
 
 	private Move move;

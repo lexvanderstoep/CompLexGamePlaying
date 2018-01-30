@@ -1,5 +1,7 @@
 package uk.co.complex.lvs.ggp.forms;
 
+import uk.co.complex.lvs.ggp.State;
+
 /**
  * The GameOutput interface represents an object which has the ability to output game state and
  * log game messages. It is used by <code>GameManager</code> to display game information.
@@ -8,14 +10,14 @@ package uk.co.complex.lvs.ggp.forms;
  */
 public interface GameOutput {
 	/**
-	 * Print the given message.
-	 * @param message Message to print
+	 * Print the current state of the game
+	 * @param state State to print
 	 */
-	public void print(Object message);
+	public void print(State state);
 	
 	/**
 	 * Log the given message.
 	 * @param message Message to log
 	 */
-	public void log(Object message);
+	public void log(String message);
 }

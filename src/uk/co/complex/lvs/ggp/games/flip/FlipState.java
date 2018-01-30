@@ -61,7 +61,7 @@ public class FlipState extends State {
 
         // Print who's turn it is
         s += "\n";
-        s += "Turn: " + (wTurn?"W":"B") + "\n";
+        s += "Turn: " + (wTurn?getPlayers().get(0):getPlayers().get(1)) + " (" + (wTurn?"W":"B") + ")" + "\n";
         s += (new String(chars)) + "\n";
         s += "\n";
 

@@ -5,11 +5,10 @@ import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.List;
 
-import uk.co.complex.lvs.ggp.GraphicalState;
 import uk.co.complex.lvs.ggp.Player;
 import uk.co.complex.lvs.ggp.State;
 
-public class TicTacToeState extends State implements GraphicalState {
+public class TicTacToeState extends State{
 	/* The board is indexed as follows:
 	 * -------
 	 * |0|1|2|
@@ -64,29 +63,6 @@ public class TicTacToeState extends State implements GraphicalState {
 		s += "\n";
 		
 		return s;
-	}
-
-	private int toRGB(int r, int g, int b) {
-		return (r << 16) | (g << 8) | b;
-	}
-
-	public Image toImage(int width, int height) {
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		Graphics g = image.getGraphics();
-		g.setColor(Color.white);
-		g.fillRect(1, 1, width - 2, height - 2);
-		g.setColor(Color.black);
-		for (int i = 0; i < 9; i++) {
-			int x = (i%3)*width/3 + width/6;
-			int y = (i/3)*height/3 + height/6;
-			if (board[i] == BoxState.X) {
-				g.drawLine(x - width/8, y - height/8, x + width/8, y + height/8);
-				g.drawLine(x + width/8, y - height/8, x - width/8, y + height/8);
-			} else if (board[i] == BoxState.O) {
-				g.drawOval(x - width/8, y - height/8, width/4, height/4);
-			}
-		}
-		return image;
 	}
 	
 	public enum BoxState {
